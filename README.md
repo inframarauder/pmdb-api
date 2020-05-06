@@ -1,4 +1,3 @@
-# pmdb-api
 # Public Movie Database (API)
 This is an open source movie database that can be used to retrieve data about various movies.
 It is a demo Node.js,Express and MongoDB REST API, built with the purpose of: 
