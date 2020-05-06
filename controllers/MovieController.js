@@ -1,4 +1,4 @@
-const { Movie } = require("../models/movie.model");
+const { Movie, validateMovie } = require("../models/movie.model");
 
 //retrieve all movies from database in LIFO manner
 exports.list = async (req, res) => {
@@ -14,8 +14,13 @@ exports.list = async (req, res) => {
 //create a new movie
 exports.create = async (req, res) => {
   try {
-    let movie = await new Movie(req.body).save();
-    return res.status(200).json(movie);
+    let { error } = validateMovie(req.body);
+    if (error) {
+      return res.status(400).json({ error: error.details[0].message });
+    } else {
+      let movie = await new Movie(req.body).save();
+      return res.status(200).json(movie);
+    }
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Internal Server Error!" });
