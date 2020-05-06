@@ -4,6 +4,9 @@ const express = require("express");
 const cors = require("cors");
 const bodyparser = require("body-parser");
 
+//require app dependencies
+const db = require("./configs/db");
+
 //initialize express app
 const app = express();
 
@@ -11,6 +14,9 @@ const app = express();
 app.use(cors());
 app.use(bodyparser.urlencoded({ extended: false }));
 app.use(bodyparser.json());
+
+//DB connection
+db.createConnection();
 
 //root route handler
 app.get("/", (req, res) => {
