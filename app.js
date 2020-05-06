@@ -6,6 +6,7 @@ const bodyparser = require("body-parser");
 
 //require app dependencies
 const db = require("./configs/db");
+const routes = require("./routes");
 
 //initialize express app
 const app = express();
@@ -22,6 +23,9 @@ db.createConnection();
 app.get("/", (req, res) => {
   res.status(200).json({ message: "Welcome to the Public Movie Database!" });
 });
+
+//other routes
+app.use("/api", routes);
 
 //start server
 const port = process.env.PORT || 3000;
