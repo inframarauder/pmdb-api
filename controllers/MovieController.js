@@ -1,4 +1,5 @@
 const { Movie, validateMovie } = require("../models/movie.model");
+const cloudinary = require("../configs/cloudinary");
 
 //retrieve all movies from database in LIFO manner
 exports.list = async (req, res) => {
@@ -18,8 +19,18 @@ exports.create = async (req, res) => {
     if (error) {
       return res.status(400).json({ error: error.details[0].message });
     } else {
-      let movie = await new Movie(req.body).save();
-      return res.status(200).json(movie);
+      let cloudinaryUploads = {};
+      for (var file of req.files) {
+        let upload = await cloudinary.v2.uploader.upload(file.path, {
+          public_id: `pmdb/posters/${file.originalname}${Date.now()}`,
+        });
+        cloudinaryUploads[`${file.fieldname}`] = upload.secure_url;
+      }
+      let newMovie = await new Movie({
+        ...req.body,
+        ...cloudinaryUploads,
+      }).save();
+      return res.status(200).json(newMovie);
     }
   } catch (error) {
     console.error(error);

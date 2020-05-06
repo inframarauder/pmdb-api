@@ -1,11 +1,12 @@
 const router = require("express").Router();
 const MovieController = require("../controllers/MovieController");
+const uploadMiddleware = require("../middlewares/uploadMiddleware");
 
 //movie routes
 //list
 router.get("/movies", MovieController.list);
 //create
-router.post("/movies", MovieController.create);
+router.post("/movies", uploadMiddleware, MovieController.create);
 //read
 router.get("/movies/:id", MovieController.read);
 //update
