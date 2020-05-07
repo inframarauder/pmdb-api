@@ -4,13 +4,12 @@ const bcrypt = require("bcryptjs");
 exports.signup = async (req, res) => {
   try {
     let { error } = validateUser(req.body);
-    if (err)
-      if (error) {
-        return res.status(400).json({ error: error.details[0].message });
-      } else {
-        let newUser = await new User(req.body).save();
-        return res.status(200).json(newUser);
-      }
+    if (error) {
+      return res.status(400).json({ error: error.details[0].message });
+    } else {
+      let newUser = await new User(req.body).save();
+      return res.status(200).json(newUser);
+    }
   } catch (error) {
     console.error(error);
     if (error.code === 11000) {
@@ -26,30 +25,29 @@ exports.signup = async (req, res) => {
 exports.login = async (req, res) => {
   try {
     let { error } = validateUser(req.body);
-    if (err)
-      if (error) {
-        return res.status(400).json({ error: error.details[0].message });
+    if (error) {
+      return res.status(400).json({ error: error.details[0].message });
+    } else {
+      //check if user exists in DB
+      let user = await User.findOne({ username: req.body.username });
+      //return error message if not
+      if (!user) {
+        return res.status(404).json({ error: "No user found!" });
       } else {
-        //check if user exists in DB
-        let user = await User.findOne({ username: req.body.username });
-        //return error message if not
-        if (!user) {
-          return res.status(404).json({ error: "No user found!" });
+        //compare passwords on finding user
+        let valid = await bcrypt.compare(req.body.password, user.password);
+        if (valid) {
+          //return JWT on successful match
+          let token = user.generateAuthToken();
+          return res.status(200).json({ token });
         } else {
-          //compare passwords on finding user
-          let valid = await bcrypt.compare(req.body.password, user.password);
-          if (valid) {
-            //return JWT on successful match
-            let token = user.generateAuthToken();
-            return res.status(200).json({ token });
-          } else {
-            //send error message if passwords don't match
-            return res
-              .status(401)
-              .json({ error: "Invalid username or password!" });
-          }
+          //send error message if passwords don't match
+          return res
+            .status(401)
+            .json({ error: "Invalid username or password!" });
         }
       }
+    }
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Internal Server Error!" });
