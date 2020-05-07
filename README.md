@@ -31,6 +31,7 @@ To run the app, you must have Node.js and MongoDB installed
    DB_URI=<your_mongo_connection_string>
    JWT_PRIVATE_KEY=<your_jwt_private_key>
   ```
+- run the command `npm start` in the terminal
 
 There are two schemas - `User` and `Movie` and the following endpoints :
 
