@@ -18,12 +18,18 @@ exports.create = async (req, res) => {
     if (error) {
       return res.status(400).json({ error: error.details[0].message });
     } else {
-      let movie = await new Movie(req.body).save();
-      return res.status(200).json(movie);
+      let newMovie = await new Movie(req.body).save();
+      return res.status(200).json(newMovie);
     }
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ error: "Internal Server Error!" });
+    if (error.code === 11000) {
+      return res.status(400).json({
+        error: `A movie with the name ${req.body.name} already exists!`,
+      });
+    } else {
+      return res.status(500).json({ error: "Internal Server Error!" });
+    }
   }
 };
 
