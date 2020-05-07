@@ -1,6 +1,10 @@
 const router = require("express").Router();
 const MovieController = require("../controllers/MovieController");
 
+//auth routes
+router.post("/auth/login");
+router.post("/auth/signup");
+
 //movie routes
 //list
 router.get("/movies", MovieController.list);
