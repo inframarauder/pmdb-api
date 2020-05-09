@@ -28,6 +28,7 @@ To run the app, you must have Node.js and MongoDB installed
 - create a file called `.env` at the root of the project directory
 - add the following environment variables in the file:
   ```
+   PORT=<preffered port no>
    DB_URI=<your_mongo_connection_string>
    JWT_PRIVATE_KEY=<your_jwt_private_key>
   ```
