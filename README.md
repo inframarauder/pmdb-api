@@ -17,6 +17,8 @@ Concepts Covered:
 - Mongoose middleware (pre-hook)
 - Mongoose schema level methods
 
+Deployed at : https://pmdbapi.herokuapp.com/
+
 ### Documentation
 
 This is a very simple REST API that demonstrates basic CRUD operations and user authentication.
