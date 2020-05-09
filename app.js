@@ -4,6 +4,15 @@ const express = require("express");
 const cors = require("cors");
 const bodyparser = require("body-parser");
 
+//checks for import env variables - crash app if not set
+const { DB_URI, JWT_PRIVATE_KEY } = process.env;
+if (!DB_URI || !JWT_PRIVATE_KEY) {
+  console.error(
+    "One or more of the env variables are not set, app shall crash!"
+  );
+  process.exit(-1);
+}
+
 //require app dependencies
 const db = require("./configs/db");
 const routes = require("./routes");
