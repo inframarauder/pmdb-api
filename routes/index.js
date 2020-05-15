@@ -1,11 +1,15 @@
 const router = require("express").Router();
 const MovieController = require("../controllers/MovieController");
 const AuthController = require("../controllers/AuthController");
+const UserController = require("../controllers/UserController");
 const isAuthenticated = require("../middlewares/isAuthenticated");
 
 //auth routes
 router.post("/auth/login", AuthController.login);
 router.post("/auth/signup", AuthController.signup);
+
+//user routes
+router.get("/user/:id", isAuthenticated, UserController.read_user);
 
 //movie routes
 //list
