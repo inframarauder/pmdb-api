@@ -1,5 +1,7 @@
 const { User, validateUser } = require("../models/user.model");
+const Token = require("../models/token.model");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 exports.signup = async (req, res) => {
   try {
@@ -8,7 +10,10 @@ exports.signup = async (req, res) => {
       return res.status(400).json({ error: error.details[0].message });
     } else {
       let newUser = await new User(req.body).save();
-      return res.status(200).json(newUser);
+      let accessToken = await newUser.generateAccessToken();
+      let refreshToken = await newUser.generateRefreshToken();
+
+      return res.status(200).json({ accessToken, refreshToken });
     }
   } catch (error) {
     console.error(error);
@@ -24,28 +29,46 @@ exports.signup = async (req, res) => {
 
 exports.login = async (req, res) => {
   try {
-    let { error } = validateUser(req.body);
-    if (error) {
-      return res.status(400).json({ error: error.details[0].message });
+    let user = await User.findOne({ username: req.body.username });
+    if (!user) {
+      return res.status(404).json({ error: "No user found!" });
     } else {
-      //check if user exists in DB
-      let user = await User.findOne({ username: req.body.username });
-      //return error message if not
-      if (!user) {
-        return res.status(404).json({ error: "No user found!" });
+      let valid = await bcrypt.compare(req.body.password, user.password);
+      if (valid) {
+        let accessToken = await user.generateAccessToken();
+        let refreshToken = await user.generateRefreshToken();
+
+        return res.status(200).json({ accessToken, refreshToken });
       } else {
-        //compare passwords on finding user
-        let valid = await bcrypt.compare(req.body.password, user.password);
-        if (valid) {
-          //return JWT on successful match
-          let token = user.generateAuthToken();
-          return res.status(200).json({ token });
-        } else {
-          //send error message if passwords don't match
-          return res
-            .status(401)
-            .json({ error: "Invalid username or password!" });
-        }
+        return res.status(401).json({ error: "Invalid username or password!" });
+      }
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal Server Error!" });
+  }
+};
+
+exports.refresh_token = async (req, res) => {
+  try {
+    const { refreshToken } = req.body;
+    if (!refreshToken) {
+      return res.status(403).json({ error: "Access denied,token missing!" });
+    } else {
+      const token = await Token.findOne({ refreshToken });
+      if (!token) {
+        return res.status(401).json({ error: "Token expired!" });
+      } else {
+        const payload = jwt.verify(
+          token.refreshToken,
+          process.env.REFRESH_TOKEN_SECRET
+        );
+        const accessToken = jwt.sign(
+          { _id: payload._id },
+          process.env.ACCESS_TOKEN_SECRET,
+          { expiresIn: "1m" }
+        );
+        return res.status(200).json({ accessToken });
       }
     }
   } catch (error) {
