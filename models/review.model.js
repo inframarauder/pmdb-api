@@ -1,7 +1,7 @@
+const { Movie } = require("./movie.model");
 const mongoose = require("mongoose");
 const Joi = require("joi");
 Joi.objectId = require("joi-objectid")(Joi);
-
 const Schema = mongoose.Schema;
 
 const reviewSchema = new Schema({
@@ -11,6 +11,22 @@ const reviewSchema = new Schema({
   content: { type: String, minlength: 10, maxlength: 1000 },
 });
 
+//post hook to calculate average and update rating in movie model
+reviewSchema.post("save", async function (doc) {
+  try {
+    let movie = await Movie.findById(doc.movie).populate({
+      path: "reviews",
+      select: "rating",
+    });
+    movie.rating =
+      movie.reviews.reduce((a, b) => a.rating + b.rating, 0) /
+      movie.reviews.length;
+
+    await movie.save();
+  } catch (error) {
+    console.error(error);
+  }
+});
 const Review = mongoose.model("Review", reviewSchema);
 
 function validateReview(review) {
