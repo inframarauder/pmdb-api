@@ -1,6 +1,8 @@
-# Public Movie Database (API)
+# Public Movie Database - PMDb (API)
 
-This is an open source movie database that can be used to retrieve data about various movies.
+This is an open source movie database (similar to IMDb). Several movies are listed here. The users can rate and write reviews for the movies. The rating of a movie is calculated based upon ratings given by various users.
+Only admin can add/edit/delete a movie.
+
 It is a demo Node.js,Express and MongoDB REST API, built with the purpose of:
 
 - demonstrating how to build a REST API using the above techonologies
@@ -21,7 +23,6 @@ Deployed at : https://pmdbapi.herokuapp.com/
 
 ### Documentation
 
-This is a very simple REST API that demonstrates basic CRUD operations and user authentication.
 To run the app, you must have Node.js and MongoDB installed
 
 - Clone the repo

@@ -7,6 +7,7 @@ const Token = require("./token.model");
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
+  type: { type: String, required: true, enum: ["admin", "user"] },
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   email: { type: String, unique: true },
@@ -60,6 +61,7 @@ const User = mongoose.model("User", userSchema);
 function validateUser(user) {
   const schema = {
     username: Joi.string().required().min(1),
+    email: Joi.string().email(),
     password: Joi.string().required().min(6),
   };
 

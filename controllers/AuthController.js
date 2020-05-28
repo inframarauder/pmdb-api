@@ -9,7 +9,7 @@ exports.signup = async (req, res) => {
     if (error) {
       return res.status(400).json({ error: error.details[0].message });
     } else {
-      let newUser = await new User(req.body).save();
+      let newUser = await new User({ ...req.body, type: "user" }).save();
       let accessToken = await newUser.generateAccessToken();
       let refreshToken = await newUser.generateRefreshToken();
 
