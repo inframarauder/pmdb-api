@@ -18,7 +18,7 @@ userSchema.methods = {
   generateAccessToken: async function () {
     try {
       let accessToken = jwt.sign(
-        { _id: this._id },
+        { _id: this._id, type: this.type },
         process.env.ACCESS_TOKEN_SECRET,
         {
           expiresIn: process.env.TOKEN_EXPIRY_TIME,
@@ -34,7 +34,7 @@ userSchema.methods = {
   generateRefreshToken: async function () {
     try {
       let refreshToken = jwt.sign(
-        { _id: this._id },
+        { _id: this._id, type: this.type },
         process.env.REFRESH_TOKEN_SECRET
       );
 
