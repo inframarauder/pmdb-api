@@ -12,8 +12,18 @@ exports.isAuthenticated = (req, res, next) => {
       req.user = payload;
       next();
     } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error });
+      if (error.name === "TokenExpiredError") {
+        return res
+          .status(401)
+          .json({ error: "Session timed out,please login again" });
+      } else if (error.name === "JsonWebTokenError") {
+        return res
+          .status(401)
+          .json({ error: "Invalid token,please login again!" });
+      } else {
+        console.error(error);
+        return res.status(400).json({ error });
+      }
     }
   }
 };

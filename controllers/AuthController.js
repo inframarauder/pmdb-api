@@ -64,7 +64,7 @@ exports.refreshToken = async (req, res) => {
           process.env.REFRESH_TOKEN_SECRET
         );
         const accessToken = jwt.sign(
-          { _id: payload._id },
+          { _id: payload._id, type: payload.type },
           process.env.ACCESS_TOKEN_SECRET,
           { expiresIn: process.env.TOKEN_EXPIRY_TIME }
         );

@@ -56,6 +56,9 @@ exports.read = async (req, res) => {
 //update a movie
 exports.update = async (req, res) => {
   try {
+    delete req.body["rating"];
+    delete req.body["reviews"];
+
     let movie = await Movie.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,

@@ -11,7 +11,7 @@ let movieSchema = new Schema(
     cast: { type: String },
     poster: { type: String },
     plot: { type: String },
-    rating: { type: Number, default: 0, min: 0, max: 0 },
+    rating: { type: Number, default: 0, min: 0, max: 10 },
     reviews: [{ type: Schema.Types.ObjectId, ref: "Review" }],
   },
   { timestamps: true }
