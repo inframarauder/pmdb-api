@@ -1,8 +1,12 @@
 const router = require("express").Router();
+//require middlewares
+const AuthMiddleware = require("../middlewares/AuthMiddleware");
+
+//require controllers
 const MovieController = require("../controllers/MovieController");
 const AuthController = require("../controllers/AuthController");
 const UserController = require("../controllers/UserController");
-const AuthMiddleware = require("../middlewares/AuthMiddleware");
+const ReviewController = require("../controllers/ReviewController");
 
 //auth routes
 router.post("/auth/login", AuthController.login);
@@ -44,18 +48,30 @@ router.delete(
 
 //review routes
 //list
-router.get("/reviews");
+router.get("/reviews", ReviewController.list);
 
 //create
-router.post("/reviews");
+router.post(
+  "/reviews",
+  AuthMiddleware.isAuthenticated,
+  ReviewController.create
+);
 
 //read
-router.get("/reviews/:id");
+router.get("/reviews/:id", ReviewController.read);
 
 //update
-router.put("/reviews/:id");
+router.put(
+  "/reviews/:id",
+  AuthMiddleware.isAuthenticated,
+  ReviewController.update
+);
 
 //delete
-router.delete("/reviews/:id");
+router.delete(
+  "/reviews/:id",
+  AuthMiddleware.isAuthenticated,
+  ReviewController.delete
+);
 
 module.exports = router;
