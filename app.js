@@ -5,8 +5,8 @@ const cors = require("cors");
 const bodyparser = require("body-parser");
 
 //checks for import env variables - crash app if not set
-const { DB_URI, JWT_PRIVATE_KEY } = process.env;
-if (!DB_URI || !JWT_PRIVATE_KEY) {
+const { DB_URI, ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = process.env;
+if (!DB_URI || !ACCESS_TOKEN_SECRET || !REFRESH_TOKEN_SECRET) {
   console.error(
     "One or more of the env variables are not set, app shall crash!"
   );

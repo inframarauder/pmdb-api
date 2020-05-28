@@ -7,6 +7,7 @@ const isAuthenticated = require("../middlewares/isAuthenticated");
 //auth routes
 router.post("/auth/login", AuthController.login);
 router.post("/auth/signup", AuthController.signup);
+router.post("/auth/refresh_token", AuthController.refresh_token);
 
 //user routes
 router.get("/user/:id", isAuthenticated, UserController.read_user);

@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const Joi = require("joi");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const Token = require("./token.model");
 
 const Schema = mongoose.Schema;
 
@@ -10,11 +11,38 @@ const userSchema = new Schema({
   password: { type: String, required: true },
 });
 
-//JWT generation method
-userSchema.methods.generateAuthToken = function () {
-  const { JWT_PRIVATE_KEY } = process.env;
-  let token = jwt.sign({ _id: this._id }, JWT_PRIVATE_KEY);
-  return token;
+//JWT Access and Refresh token generation methods:
+userSchema.methods = {
+  generateAccessToken: async function () {
+    try {
+      let accessToken = jwt.sign(
+        { _id: this._id },
+        process.env.ACCESS_TOKEN_SECRET,
+        {
+          expiresIn: "1m",
+        }
+      );
+      return accessToken;
+    } catch (error) {
+      console.error(error);
+      return;
+    }
+  },
+
+  generateRefreshToken: async function () {
+    try {
+      let refreshToken = jwt.sign(
+        { _id: this._id },
+        process.env.REFRESH_TOKEN_SECRET
+      );
+
+      await new Token({ refreshToken }).save();
+      return refreshToken;
+    } catch (error) {
+      console.error(error);
+      return;
+    }
+  },
 };
 
 //hashing password here
