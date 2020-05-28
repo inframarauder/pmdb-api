@@ -12,7 +12,7 @@ Concepts Covered:
 - Basic CRUD operations using Express and Mongoose
 - Server side validation using Joi
 - Error handling
-- User authentication
+- User authentication using access and refresh tokens
 - Protecting routes
 - Mongoose middleware (pre-hook)
 - Mongoose schema level methods
@@ -30,33 +30,17 @@ To run the app, you must have Node.js and MongoDB installed
 - create a file called `.env` at the root of the project directory
 - add the following environment variables in the file:
   ```
-   PORT=<preffered port no>
-   DB_URI=<your_mongo_connection_string>
-   JWT_PRIVATE_KEY=<your_jwt_private_key>
+  PORT=<preffered port no>
+  DB_URI=<your_mongo_connection_string>
+  ACCESS_TOKEN_SECRET=<your_access_token_secret>
+  REFRESH_TOKEN_SECRET=<your_refresh_token_secret>
+  TOKEN_EXPIRY_TIME=<expiry_time_in_seconds>
   ```
 - run the command `npm start` in the terminal
-
-There are two schemas - `User` and `Movie` and the following endpoints :
-
-- User
-
-```
-  1. POST /api/auth/signup
-  2. POST /api/auth/login
-```
-
-- Movie
-
-```
-  1. GET /api/movies
-  2. GET /api/movies/:id
-  3. POST /api/movies (protected)
-  4. PUT /api/movies/:id(protected)
-  5. DELETE /api/movies/:id(protected)
-```
 
 Check the postman collections inside the `docs` folder for detailed documentation of the requests and responses.
 
 **_'protected'_ routes are accessible only by authenticated users. Such requests must bear a special header named _'x-auth-token'_ which should carry the JWT received on successful authentication**
 
-Go ahead and use this as a REST API backend for your frontend projects. Also, feature requests and PRs are welcome :)
+Go ahead and use this as a REST API backend for your frontend projects.
+Also, feature requests and PRs are welcome :)

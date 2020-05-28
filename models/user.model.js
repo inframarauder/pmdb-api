@@ -9,6 +9,7 @@ const Schema = mongoose.Schema;
 const userSchema = new Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  email: { type: String, unique: true },
 });
 
 //JWT Access and Refresh token generation methods:
@@ -19,7 +20,7 @@ userSchema.methods = {
         { _id: this._id },
         process.env.ACCESS_TOKEN_SECRET,
         {
-          expiresIn: "1m",
+          expiresIn: process.env.TOKEN_EXPIRY_TIME,
         }
       );
       return accessToken;

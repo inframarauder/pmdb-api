@@ -66,7 +66,7 @@ exports.refresh_token = async (req, res) => {
         const accessToken = jwt.sign(
           { _id: payload._id },
           process.env.ACCESS_TOKEN_SECRET,
-          { expiresIn: "1m" }
+          { expiresIn: process.env.TOKEN_EXPIRY_TIME }
         );
         return res.status(200).json({ accessToken });
       }
