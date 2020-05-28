@@ -9,7 +9,7 @@ exports.signup = async (req, res) => {
     if (error) {
       return res.status(400).json({ error: error.details[0].message });
     } else {
-      let newUser = await new User(req.body).save();
+      let newUser = await new User({ ...req.body, type: "user" }).save();
       let accessToken = await newUser.generateAccessToken();
       let refreshToken = await newUser.generateRefreshToken();
 
@@ -49,7 +49,7 @@ exports.login = async (req, res) => {
   }
 };
 
-exports.refresh_token = async (req, res) => {
+exports.refreshToken = async (req, res) => {
   try {
     const { refreshToken } = req.body;
     if (!refreshToken) {
@@ -64,13 +64,24 @@ exports.refresh_token = async (req, res) => {
           process.env.REFRESH_TOKEN_SECRET
         );
         const accessToken = jwt.sign(
-          { _id: payload._id },
+          { _id: payload._id, type: payload.type },
           process.env.ACCESS_TOKEN_SECRET,
-          { expiresIn: "1m" }
+          { expiresIn: process.env.TOKEN_EXPIRY_TIME }
         );
         return res.status(200).json({ accessToken });
       }
     }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal Server Error!" });
+  }
+};
+
+exports.logout = async (req, res) => {
+  try {
+    const { refreshToken } = req.body;
+    await Token.findOneAndDelete({ refreshToken });
+    return res.status(200).json({ success: "User logged out!" });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Internal Server Error!" });

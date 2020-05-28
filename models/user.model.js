@@ -7,8 +7,10 @@ const Token = require("./token.model");
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
+  type: { type: String, required: true, enum: ["admin", "user"] },
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  email: { type: String, unique: true },
 });
 
 //JWT Access and Refresh token generation methods:
@@ -16,10 +18,10 @@ userSchema.methods = {
   generateAccessToken: async function () {
     try {
       let accessToken = jwt.sign(
-        { _id: this._id },
+        { _id: this._id, type: this.type },
         process.env.ACCESS_TOKEN_SECRET,
         {
-          expiresIn: "1m",
+          expiresIn: process.env.TOKEN_EXPIRY_TIME,
         }
       );
       return accessToken;
@@ -32,7 +34,7 @@ userSchema.methods = {
   generateRefreshToken: async function () {
     try {
       let refreshToken = jwt.sign(
-        { _id: this._id },
+        { _id: this._id, type: this.type },
         process.env.REFRESH_TOKEN_SECRET
       );
 
@@ -59,6 +61,7 @@ const User = mongoose.model("User", userSchema);
 function validateUser(user) {
   const schema = {
     username: Joi.string().required().min(1),
+    email: Joi.string().email(),
     password: Joi.string().required().min(6),
   };
 

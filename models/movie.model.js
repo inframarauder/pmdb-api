@@ -9,9 +9,10 @@ let movieSchema = new Schema(
     year: { type: Number },
     directedBy: { type: String },
     cast: { type: String },
-    plot: { type: String },
-    rating: { type: Number, default: -1 },
     poster: { type: String },
+    plot: { type: String },
+    rating: { type: Number, default: 0, min: 0, max: 10 },
+    reviews: [{ type: Schema.Types.ObjectId, ref: "Review" }],
   },
   { timestamps: true }
 );
@@ -27,7 +28,6 @@ function validateMovie(movie) {
     directedBy: Joi.string(),
     cast: Joi.string(),
     plot: Joi.string().min(50).max(1000),
-    rating: Joi.number().min(0).max(10),
     poster: Joi.string().uri(),
   };
 

@@ -3,7 +3,13 @@ const { Movie, validateMovie } = require("../models/movie.model");
 //retrieve all movies from database in LIFO manner
 exports.list = async (req, res) => {
   try {
-    let movies = await Movie.find().sort({ _id: -1 });
+    let movies = await Movie.find()
+      .sort({ _id: -1 })
+      .populate({
+        path: "reviews",
+        populate: { path: "writtenBy", select: "username" },
+        select: ["rating", "content"],
+      });
     return res.status(200).json(movies);
   } catch (error) {
     console.error(error);
@@ -36,7 +42,11 @@ exports.create = async (req, res) => {
 //read a movie
 exports.read = async (req, res) => {
   try {
-    let movie = await Movie.findById(req.params.id);
+    let movie = await Movie.findById(req.params.id).populate({
+      path: "reviews",
+      populate: { path: "writtenBy", select: "username" },
+      select: ["rating", "content"],
+    });
     if (!movie) {
       return res.status(404).json({ error: "Movie not found!" });
     } else {
@@ -51,9 +61,16 @@ exports.read = async (req, res) => {
 //update a movie
 exports.update = async (req, res) => {
   try {
+    delete req.body["rating"];
+    delete req.body["reviews"];
+
     let movie = await Movie.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
+    }).populate({
+      path: "reviews",
+      populate: { path: "writtenBy", select: "username" },
+      select: ["rating", "content"],
     });
     if (!movie) {
       return res.status(404).json({ error: "Movie not found!" });
