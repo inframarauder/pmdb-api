@@ -16,7 +16,9 @@ Concepts Covered:
 - Error handling
 - User authentication using access and refresh tokens
 - Protecting routes
-- Mongoose middleware (pre-hook)
+- Managing user roles
+- Mongoose populate method
+- Mongoose middleware (pre and post save hooks)
 - Mongoose schema level methods
 
 Deployed at : https://pmdbapi.herokuapp.com/
