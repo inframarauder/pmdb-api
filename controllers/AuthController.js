@@ -49,7 +49,7 @@ exports.login = async (req, res) => {
   }
 };
 
-exports.refresh_token = async (req, res) => {
+exports.refreshToken = async (req, res) => {
   try {
     const { refreshToken } = req.body;
     if (!refreshToken) {

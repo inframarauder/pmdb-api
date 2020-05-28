@@ -1,6 +1,6 @@
 const User = require("../models/user.model");
 
-exports.read_user = async (req, res) => {
+exports.readUser = async (req, res) => {
   try {
     let user = await User.findById(req.params.id, { password: 0, type: 0 });
     if (!user) {
