@@ -5,7 +5,11 @@ exports.list = async (req, res) => {
   try {
     let movies = await Movie.find()
       .sort({ _id: -1 })
-      .populate({ path: "reviews", select: ["writtenBy", "content"] });
+      .populate({
+        path: "reviews",
+        populate: { path: "writtenBy", select: "username" },
+        select: ["rating", "content"],
+      });
     return res.status(200).json(movies);
   } catch (error) {
     console.error(error);
@@ -40,7 +44,8 @@ exports.read = async (req, res) => {
   try {
     let movie = await Movie.findById(req.params.id).populate({
       path: "reviews",
-      select: ["writtenBy", "content"],
+      populate: { path: "writtenBy", select: "username" },
+      select: ["rating", "content"],
     });
     if (!movie) {
       return res.status(404).json({ error: "Movie not found!" });
@@ -62,7 +67,11 @@ exports.update = async (req, res) => {
     let movie = await Movie.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
-    }).populate({ path: "reviews", select: ["writtenBy", "content"] });
+    }).populate({
+      path: "reviews",
+      populate: { path: "writtenBy", select: "username" },
+      select: ["rating", "content"],
+    });
     if (!movie) {
       return res.status(404).json({ error: "Movie not found!" });
     } else {
