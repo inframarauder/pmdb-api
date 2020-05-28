@@ -52,10 +52,10 @@ exports.update = async (req, res) => {
     //users can update only reviews written by themselves
     let { id } = req.params;
     if (id === req.user._id) {
-      //only content can be updated
+      //only rating and content can be updated
       let review = await Review.findByIdAndUpdate(
         id,
-        { content: req.body.content },
+        { rating: req.body.rating, content: req.body.content },
         { new: true, runValidators: true }
       )
         .populate("movie")
