@@ -42,4 +42,20 @@ router.delete(
   MovieController.delete
 );
 
+//review routes
+//list
+router.get("/reviews");
+
+//create
+router.post("/reviews");
+
+//read
+router.get("/reviews/:id");
+
+//update
+router.put("/reviews/:id");
+
+//delete
+router.delete("/reviews/:id");
+
 module.exports = router;
