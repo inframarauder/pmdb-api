@@ -21,11 +21,25 @@ exports.create = async (req, res) => {
     if (error) {
       return res.status(400).json({ error: error.details[0].message });
     } else {
-      let review = await new Review(req.body).save();
-      await Movie.findByIdAndUpdate(req.body.movie, {
-        $push: { reviews: review },
+      //a user cannot give multiple reviews for the same movie
+      let review = await Review.findOne({
+        writtenBy: req.user._id,
+        movie: req.body.movie,
       });
-      return res.status(201).json(review);
+      if (review) {
+        return res
+          .status(400)
+          .json({ error: "You can post only one review for a movie." });
+      } else {
+        let newReview = await new Review({
+          ...req.body,
+          writtenBy: req.user._id,
+        }).save();
+        await Movie.findByIdAndUpdate(req.body.movie, {
+          $push: { reviews: newReview },
+        });
+        return res.status(201).json(newReview);
+      }
     }
   } catch (error) {
     console.error(error);

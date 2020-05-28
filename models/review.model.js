@@ -18,7 +18,6 @@ function validateReview(review) {
     content: Joi.string().min(10).max(1000).required(),
     rating: Joi.number().required().min(0).max(10),
     movie: Joi.objectId().required(),
-    writtenBy: Joi.objectId(),
   };
 
   return Joi.validate(review, schema);
