@@ -14,7 +14,11 @@ router.post("/auth/signup", AuthController.signup);
 router.post("/auth/refresh_token", AuthController.refreshToken);
 
 //user routes
-router.get("/user/:id", isAuthenticated, UserController.readUser);
+router.get(
+  "/user/:id",
+  AuthMiddleware.isAuthenticated,
+  UserController.readUser
+);
 
 //movie routes
 //list
