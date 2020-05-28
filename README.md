@@ -21,7 +21,7 @@ Concepts Covered:
 
 Deployed at : https://pmdbapi.herokuapp.com/
 
-### Documentation
+### Running the App
 
 To run the app, you must have Node.js and MongoDB installed
 
@@ -39,9 +39,6 @@ To run the app, you must have Node.js and MongoDB installed
   ```
 - run the command `npm start` in the terminal
 
-Check the postman collections inside the `docs` folder for detailed documentation of the requests and responses.
+### Documentation
 
-**_'protected'_ routes are accessible only by authenticated users. Such requests must bear a special header named _'x-auth-token'_ which should carry the JWT received on successful authentication**
-
-Go ahead and use this as a REST API backend for your frontend projects.
-Also, feature requests and PRs are welcome :)
+Will be updated soon :)
