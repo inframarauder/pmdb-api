@@ -12,7 +12,7 @@ const ReviewController = require("../controllers/ReviewController");
 router.post("/auth/login", AuthController.login);
 router.post("/auth/signup", AuthController.signup);
 router.post("/auth/refresh_token", AuthController.refreshToken);
-
+router.delete("/auth/logout", AuthController.logout);
 //user routes
 router.get(
   "/user/:id",

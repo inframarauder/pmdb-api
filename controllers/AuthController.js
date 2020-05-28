@@ -76,3 +76,14 @@ exports.refreshToken = async (req, res) => {
     return res.status(500).json({ error: "Internal Server Error!" });
   }
 };
+
+exports.logout = async (req, res) => {
+  try {
+    const { refreshToken } = req.body;
+    await Token.findOneAndDelete({ refreshToken });
+    return res.status(200).json({ success: "User logged out!" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal Server Error!" });
+  }
+};
