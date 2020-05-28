@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const { Review, validateReview } = require("../models/review.model");
-const { Movie } = require("../models/movie.model");
 
 exports.list = async (req, res) => {
   try {
@@ -35,9 +34,6 @@ exports.create = async (req, res) => {
           ...req.body,
           writtenBy: req.user._id,
         }).save();
-        await Movie.findByIdAndUpdate(req.body.movie, {
-          $push: { reviews: newReview },
-        });
         return res.status(201).json(newReview);
       }
     }

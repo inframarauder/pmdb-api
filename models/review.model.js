@@ -11,22 +11,41 @@ const reviewSchema = new Schema({
   content: { type: String, minlength: 10, maxlength: 1000 },
 });
 
-//post hook to calculate average and update rating in movie model
-reviewSchema.post("save", async function (doc) {
+reviewSchema.pre("save", function (next) {
+  this.wasNew = this.isNew;
+  next();
+});
+
+/**
+ * This post hook serves two purposes:
+ * - update movie with new review
+ * - update average rating of the movie
+ */
+reviewSchema.post("save", async function () {
   try {
-    let movie = await Movie.findById(doc.movie).populate({
-      path: "reviews",
-      select: "rating",
-    });
-    movie.rating =
-      movie.reviews.reduce((a, b) => a.rating + b.rating, 0) /
-      movie.reviews.length;
+    let movie;
+    if (this.wasNew) {
+      movie = await Movie.findByIdAndUpdate(
+        this.movie,
+        { $push: { reviews: this } },
+        { new: true, runValidators: true }
+      ).populate({ path: "reviews", select: "rating" });
+    } else {
+      movie = await Movie.findById(this.movie).populate({
+        path: "reviews",
+        select: { rating: 1, _id: 0 },
+      });
+    }
+    let reviews = movie.reviews.map((review) => review.rating);
+    let averageRating = reviews.reduce((a, b) => a + b) / reviews.length;
+    movie.rating = averageRating;
 
     await movie.save();
   } catch (error) {
     console.error(error);
   }
 });
+
 const Review = mongoose.model("Review", reviewSchema);
 
 function validateReview(review) {
