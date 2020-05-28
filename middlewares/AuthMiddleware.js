@@ -1,7 +1,8 @@
-//middleware to protect routes
 const jwt = require("jsonwebtoken");
 
-module.exports = (req, res, next) => {
+//middleware to protect routes
+
+exports.isAuthenticated = (req, res, next) => {
   let token = req.header("x-auth-token");
   if (!token) {
     return res.status(403).json({ error: "Access denied, no token provided!" });
@@ -14,5 +15,15 @@ module.exports = (req, res, next) => {
       console.error(error);
       return res.status(400).json({ error });
     }
+  }
+};
+
+//middleware to check admin permission
+exports.isAdmin = (req, res, next) => {
+  let { type } = req.user;
+  if (type && type === "admin") {
+    next();
+  } else {
+    return res.status(403).json({ error: "Invalid user type!" });
   }
 };
