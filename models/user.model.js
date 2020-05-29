@@ -7,7 +7,7 @@ const Token = require("./token.model");
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-  type: { type: String, required: true, enum: ["admin", "user"] },
+  type: { type: String, default: "user", enum: ["admin", "user"] },
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   email: { type: String, required: true, unique: true },
