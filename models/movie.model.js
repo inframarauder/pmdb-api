@@ -17,6 +17,8 @@ let movieSchema = new Schema(
   { timestamps: true }
 );
 
+movieSchema.index({ genre: "text" }); //full text search to be done on genre
+
 const Movie = mongoose.model("Movie", movieSchema);
 
 //server side validation logic for incoming requests

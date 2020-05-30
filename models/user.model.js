@@ -7,10 +7,10 @@ const Token = require("./token.model");
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-  type: { type: String, required: true, enum: ["admin", "user"] },
+  type: { type: String, default: "user", enum: ["admin", "user"] },
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  email: { type: String, unique: true },
+  email: { type: String, required: true, unique: true },
 });
 
 //JWT Access and Refresh token generation methods:
@@ -61,7 +61,7 @@ const User = mongoose.model("User", userSchema);
 function validateUser(user) {
   const schema = {
     username: Joi.string().required().min(1),
-    email: Joi.string().email(),
+    email: Joi.string().required().email(),
     password: Joi.string().required().min(6),
   };
 
