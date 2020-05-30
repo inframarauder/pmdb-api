@@ -3,13 +3,10 @@ const { Movie, validateMovie } = require("../models/movie.model");
 //retrieve all movies from database in LIFO manner
 exports.list = async (req, res) => {
   try {
-    let movies = await Movie.find()
-      .sort({ _id: -1 })
-      .populate({
-        path: "reviews",
-        populate: { path: "writtenBy", select: "username" },
-        select: ["rating", "content"],
-      });
+    let movies = await Movie.find(res.locals.query, { reviews: 0 }).sort({
+      rating: -1,
+    });
+
     return res.status(200).json(movies);
   } catch (error) {
     console.error(error);

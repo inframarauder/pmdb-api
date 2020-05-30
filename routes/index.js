@@ -1,6 +1,7 @@
 const router = require("express").Router();
 //require middlewares
 const AuthMiddleware = require("../middlewares/AuthMiddleware");
+const FilterMiddleware = require("../middlewares/FilterMiddleware");
 
 //require controllers
 const MovieController = require("../controllers/MovieController");
@@ -22,7 +23,7 @@ router.get(
 
 //movie routes
 //list
-router.get("/movies", MovieController.list);
+router.get("/movies", FilterMiddleware.filterMovies, MovieController.list);
 
 //create (protected route)
 router.post(
