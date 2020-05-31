@@ -1,6 +1,6 @@
 const { Movie, validateMovie } = require("../models/movie.model");
 
-//retrieve all movies from database in LIFO manner
+//listing movies based on filters passed,in descending order of rating
 exports.list = async (req, res) => {
   try {
     let movies = await Movie.find(res.locals.query, { reviews: 0 }).sort({

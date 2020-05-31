@@ -14,12 +14,10 @@ router.post("/auth/login", AuthController.login);
 router.post("/auth/signup", AuthController.signup);
 router.post("/auth/refresh_token", AuthController.refreshToken);
 router.delete("/auth/logout", AuthController.logout);
+
 //user routes
-router.get(
-  "/user/:id",
-  AuthMiddleware.isAuthenticated,
-  UserController.readUser
-);
+router.get("/user/:id", AuthMiddleware.isAuthenticated, UserController.read);
+router.put("/user/:id", AuthMiddleware.isAuthenticated, UserController.update);
 
 //movie routes
 //list
