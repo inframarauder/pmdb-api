@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { Review, validateReview } = require("../models/review.model");
+const Review = require("../models/review.model");
 
 exports.list = async (req, res) => {
   try {
@@ -16,26 +16,21 @@ exports.list = async (req, res) => {
 
 exports.create = async (req, res) => {
   try {
-    let { error } = validateReview(req.body);
-    if (error) {
-      return res.status(400).json({ error: error.details[0].message });
+    //a user cannot give multiple reviews for the same movie
+    let review = await Review.findOne({
+      writtenBy: req.user._id,
+      movie: req.body.movie,
+    });
+    if (review) {
+      return res
+        .status(400)
+        .json({ error: "You can post only one review for a movie." });
     } else {
-      //a user cannot give multiple reviews for the same movie
-      let review = await Review.findOne({
+      let newReview = await new Review({
+        ...req.body,
         writtenBy: req.user._id,
-        movie: req.body.movie,
-      });
-      if (review) {
-        return res
-          .status(400)
-          .json({ error: "You can post only one review for a movie." });
-      } else {
-        let newReview = await new Review({
-          ...req.body,
-          writtenBy: req.user._id,
-        }).save();
-        return res.status(201).json(newReview);
-      }
+      }).save();
+      return res.status(201).json(newReview);
     }
   } catch (error) {
     console.error(error);

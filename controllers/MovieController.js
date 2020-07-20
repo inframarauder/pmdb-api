@@ -1,4 +1,4 @@
-const { Movie, validateMovie } = require("../models/movie.model");
+const Movie = require("../models/movie.model");
 
 //listing movies based on filters passed,in descending order of rating
 exports.list = async (req, res) => {
@@ -17,13 +17,8 @@ exports.list = async (req, res) => {
 //create a new movie
 exports.create = async (req, res) => {
   try {
-    let { error } = validateMovie(req.body);
-    if (error) {
-      return res.status(400).json({ error: error.details[0].message });
-    } else {
-      let newMovie = await new Movie(req.body).save();
-      return res.status(200).json(newMovie);
-    }
+    let newMovie = await new Movie(req.body).save();
+    return res.status(200).json(newMovie);
   } catch (error) {
     console.error(error);
     if (error.code === 11000) {

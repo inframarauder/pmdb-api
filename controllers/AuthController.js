@@ -1,20 +1,15 @@
-const { User, validateUser } = require("../models/user.model");
+const User = require("../models/user.model");
 const Token = require("../models/token.model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 exports.signup = async (req, res) => {
   try {
-    let { error } = validateUser(req.body);
-    if (error) {
-      return res.status(400).json({ error: error.details[0].message });
-    } else {
-      let newUser = await new User(req.body).save();
-      let accessToken = await newUser.generateAccessToken();
-      let refreshToken = await newUser.generateRefreshToken();
+    let newUser = await new User(req.body).save();
+    let accessToken = await newUser.generateAccessToken();
+    let refreshToken = await newUser.generateRefreshToken();
 
-      return res.status(200).json({ accessToken, refreshToken });
-    }
+    return res.status(200).json({ accessToken, refreshToken });
   } catch (error) {
     console.error(error);
     if (error.code === 11000) {

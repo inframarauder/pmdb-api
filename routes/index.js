@@ -2,6 +2,7 @@ const router = require("express").Router();
 //require middlewares
 const AuthMiddleware = require("../middlewares/AuthMiddleware");
 const FilterMiddleware = require("../middlewares/FilterMiddleware");
+const ValidationMiddleware = require("../middlewares/ValidationMiddleware");
 
 //require controllers
 const MovieController = require("../controllers/MovieController");
@@ -11,7 +12,11 @@ const ReviewController = require("../controllers/ReviewController");
 
 //auth routes
 router.post("/auth/login", AuthController.login);
-router.post("/auth/signup", AuthController.signup);
+router.post(
+  "/auth/signup",
+  ValidationMiddleware.validate,
+  AuthController.signup
+);
 router.post("/auth/refresh_token", AuthController.refreshToken);
 router.delete("/auth/logout", AuthController.logout);
 
@@ -57,6 +62,7 @@ router.get("/reviews", ReviewController.list);
 router.post(
   "/reviews",
   AuthMiddleware.isAuthenticated,
+  ValidationMiddleware.validate,
   ReviewController.create
 );
 
