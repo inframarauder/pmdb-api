@@ -1,7 +1,5 @@
 const Movie = require("./movie.model");
 const mongoose = require("mongoose");
-const Joi = require("joi");
-Joi.objectId = require("joi-objectid")(Joi);
 const Schema = mongoose.Schema;
 
 const reviewSchema = new Schema({
@@ -46,16 +44,4 @@ reviewSchema.post("save", async function () {
   }
 });
 
-const Review = mongoose.model("Review", reviewSchema);
-
-function validateReview(review) {
-  const schema = {
-    content: Joi.string().min(10).max(1000).required(),
-    rating: Joi.number().required().min(0).max(10),
-    movie: Joi.objectId().required(),
-  };
-
-  return Joi.validate(review, schema);
-}
-
-module.exports = { Review, validateReview };
+module.exports = mongoose.model("Review", reviewSchema);
