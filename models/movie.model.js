@@ -4,10 +4,10 @@ const Schema = mongoose.Schema;
 let movieSchema = new Schema(
   {
     name: { type: String, required: true, unique: true },
-    genres: [{ type: String, ref: "Genre" }],
+    genres: { type: String },
     year: { type: Number },
-    directors: [],
-    cast: [],
+    directors: { type: String },
+    starring: { type: String },
     runtime: { type: Number },
     poster: { type: String },
     plot: { type: String },
