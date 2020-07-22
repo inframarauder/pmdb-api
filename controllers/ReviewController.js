@@ -4,8 +4,11 @@ const Review = require("../models/review.model");
 exports.list = async (req, res) => {
   try {
     let reviews = await Review.find()
-      .populate({ path: "movie", select: ["name"] })
-      .populate({ path: "writtenBy", select: ["username"] });
+      .populate({
+        path: "author",
+        select: ["username"],
+      })
+      .sort({ rating: -1 });
 
     return res.status(200).json(reviews);
   } catch (error) {
@@ -18,7 +21,7 @@ exports.create = async (req, res) => {
   try {
     //a user cannot give multiple reviews for the same movie
     let review = await Review.findOne({
-      writtenBy: req.user._id,
+      author: req.user._id,
       movie: req.body.movie,
     });
     if (review) {
@@ -28,7 +31,7 @@ exports.create = async (req, res) => {
     } else {
       let newReview = await new Review({
         ...req.body,
-        writtenBy: req.user._id,
+        author: req.user._id,
       }).save();
       return res.status(201).json(newReview);
     }
@@ -40,9 +43,10 @@ exports.create = async (req, res) => {
 
 exports.read = async (req, res) => {
   try {
-    let review = await Review.findById(req.params.id)
-      .populate({ path: "movie", select: ["name"] })
-      .populate({ path: "writtenBy", select: ["username"] });
+    let review = await Review.findById(req.params.id).populate({
+      path: "writtenBy",
+      select: ["username"],
+    });
 
     if (review) {
       return res.status(200).json(review);
@@ -57,26 +61,22 @@ exports.read = async (req, res) => {
 
 exports.update = async (req, res) => {
   try {
+    delete req.body["movie"];
+    delete req.body["author"];
+
     //users can update only reviews written by themselves
-    let review = await Review.findById(req.params.id);
+    let review = await Review.findOneAndUpdate(
+      {
+        _id: req.params.id,
+        author: req.user._id,
+      },
+      req.body,
+      { new: true, runValidators: true }
+    ).populate({ path: "author", select: ["username"] });
     if (!review) {
       return res.status(404).json({ error: "Review not found!" });
     } else {
-      let reqUserId = mongoose.Types.ObjectId(req.user._id);
-      let reviewUserId = mongoose.Types.ObjectId(review.writtenBy);
-      if (reviewUserId.equals(reqUserId)) {
-        //only rating and content can be updated
-        review.rating = req.body.rating ? req.body.rating : review.rating;
-        review.content = req.body.content ? req.body.content : review.content;
-
-        await review.save();
-
-        return res.status(200).json(review);
-      } else {
-        return res.status(403).json({
-          error: "You cannot edit reviews written by someone else.",
-        });
-      }
+      return res.status(200).json(review);
     }
   } catch (error) {
     console.error(error);
