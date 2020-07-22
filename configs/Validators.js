@@ -4,7 +4,6 @@ Joi.objectId = require("joi-objectid")(Joi);
 exports.userValidator = (user) => {
   const schema = {
     username: Joi.string().required().min(1),
-    email: Joi.string().required().email(),
     password: Joi.string().required().min(6),
   };
 
