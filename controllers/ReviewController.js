@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Review = require("../models/review.model");
+const Helpers = require("../helpers");
 
 exports.list = async (req, res) => {
   try {
@@ -33,7 +34,8 @@ exports.create = async (req, res) => {
         ...req.body,
         author: req.user._id,
       }).save();
-      return res.status(201).json(newReview);
+      res.status(201).json(newReview);
+      Helpers.updateRating(newReview);
     }
   } catch (error) {
     console.error(error);
@@ -74,7 +76,8 @@ exports.update = async (req, res) => {
       { new: true, runValidators: true }
     ).populate({ path: "author", select: ["username"] });
     if (!review) {
-      return res.status(404).json({ error: "Review not found!" });
+      res.status(404).json({ error: "Review not found!" });
+      Helpers.updateRating(review);
     } else {
       return res.status(200).json(review);
     }
@@ -95,7 +98,8 @@ exports.delete = async (req, res) => {
     if (!review) {
       return res.status(404).json({ error: "Review not found!" });
     } else {
-      return res.status(200).json({ message: "Deleted!" });
+      res.status(200).json({ message: "Deleted!" });
+      Helpers.updateRating(review);
     }
   } catch (error) {
     console.error(error);

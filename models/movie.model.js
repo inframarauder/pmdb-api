@@ -11,6 +11,7 @@ let movieSchema = new Schema(
     runtime: { type: Number },
     poster: { type: String },
     plot: { type: String },
+    rating: { type: Number, min: 0, max: 10 },
   },
   { timestamps: true }
 );

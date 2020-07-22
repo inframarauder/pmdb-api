@@ -1,5 +1,4 @@
 const Movie = require("../models/movie.model");
-const Review = require("../models/review.model");
 
 //listing movies based on filters passed,in descending order of rating
 exports.list = async (req, res) => {
@@ -20,28 +19,6 @@ exports.read = async (req, res) => {
       return res.status(404).json({ error: "Movie not found!" });
     } else {
       return res.status(200).json(movie);
-    }
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: "Internal Server Error!" });
-  }
-};
-
-//get average rating of a movie
-exports.avgRating = async (req, res) => {
-  try {
-    let reviews = await Review.find(
-      { movie: req.params.id },
-      { rating: 1, _id: 0 }
-    ).lean();
-    if (reviews.length > 0) {
-      let sum = reviews.reduce((acc, currVal) => acc.rating + currVal.rating)
-        .rating;
-      let avgRating = sum / reviews.length;
-
-      return res.status(200).json({ avgRating });
-    } else {
-      return res.status(200).json({ avgRating: 0 });
     }
   } catch (error) {
     console.error(error);
