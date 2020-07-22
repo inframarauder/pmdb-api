@@ -3,24 +3,6 @@
 This is an open source movie database (similar to IMDb). Several movies are listed here. The users can rate and write reviews for the movies. The rating of a movie is calculated based upon ratings given by various users.
 Only admin can add/edit/delete a movie.
 
-It is a demo Node.js,Express and MongoDB REST API, built with the purpose of:
-
-- demonstrating how to build a REST API using the above techonologies
-- demonstrating programming best practices and organizing code in a very maintainable manner
-- serving as a mock backend for anyone who is venturing out to learn a new frontend framework
-
-Concepts Covered:
-
-- Basic CRUD operations using Express and Mongoose
-- Server side validation using Joi
-- Error handling
-- User authentication using access and refresh tokens
-- Protecting routes
-- Managing user roles
-- Mongoose populate method
-- Mongoose middleware (pre and post save hooks)
-- Mongoose schema level methods
-
 Deployed at : https://pmdbapi.herokuapp.com/
 
 ### Running the App

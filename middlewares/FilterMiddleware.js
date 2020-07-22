@@ -6,7 +6,7 @@ exports.filterMovies = (req, res, next) => {
     let regexQuery = { $regex: search, $options: "i" };
     res.locals.query["$or"] = [
       { name: regexQuery },
-      { genre: regexQuery },
+      { genres: regexQuery },
       { year: regexQuery },
       { directors: regexQuery },
       { starring: regexQuery },

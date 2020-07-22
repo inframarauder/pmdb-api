@@ -28,31 +28,8 @@ router.put("/user/:id", AuthMiddleware.isAuthenticated, UserController.update);
 //list
 router.get("/movies", FilterMiddleware.filterMovies, MovieController.list);
 
-//create (protected route)
-router.post(
-  "/movies",
-  AuthMiddleware.isAuthenticated,
-  AuthMiddleware.isAdmin,
-  MovieController.create
-);
 //read
 router.get("/movies/:id", MovieController.read);
-
-//update(protected route)
-router.put(
-  "/movies/:id",
-  AuthMiddleware.isAuthenticated,
-  AuthMiddleware.isAdmin,
-  MovieController.update
-);
-
-//delete(protected route)
-router.delete(
-  "/movies/:id",
-  AuthMiddleware.isAuthenticated,
-  AuthMiddleware.isAdmin,
-  MovieController.delete
-);
 
 //review routes
 //list

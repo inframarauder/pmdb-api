@@ -6,7 +6,6 @@ const Token = require("./token.model");
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-  type: { type: String, default: "user", enum: ["admin", "user"] },
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   email: { type: String, required: true, unique: true },
@@ -17,7 +16,7 @@ userSchema.methods = {
   generateAccessToken: async function () {
     try {
       let accessToken = jwt.sign(
-        { _id: this._id, type: this.type },
+        { _id: this._id },
         process.env.ACCESS_TOKEN_SECRET,
         {
           expiresIn: process.env.TOKEN_EXPIRY_TIME,
@@ -33,7 +32,7 @@ userSchema.methods = {
   generateRefreshToken: async function () {
     try {
       let refreshToken = jwt.sign(
-        { _id: this._id, type: this.type },
+        { _id: this._id },
         process.env.REFRESH_TOKEN_SECRET
       );
 
