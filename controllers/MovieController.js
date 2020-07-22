@@ -32,10 +32,12 @@ exports.avgRating = async (req, res) => {
   try {
     let reviews = await Review.find(
       { movie: req.params.id },
-      { rating: 1 }
+      { rating: 1, _id: 0 }
     ).lean();
-    let sum = reviews.reduce((acc, currVal) => acc.rating + currVal.rating);
+    let sum = reviews.reduce((acc, currVal) => acc.rating + currVal.rating)
+      .rating;
     let avgRating = sum / reviews.length;
+
     return res.status(200).json({ avgRating });
   } catch (error) {
     console.error(error);
