@@ -25,7 +25,7 @@ reviewSchema.post("save", async function () {
     if (this.wasNew) {
       movie = await Movie.findByIdAndUpdate(
         this.movie,
-        { $push: { reviews: this } },
+        { $push: { reviews: this._id } },
         { new: true, runValidators: true }
       ).populate({ path: "reviews", select: "rating" });
     } else {
