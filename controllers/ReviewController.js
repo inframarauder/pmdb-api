@@ -87,20 +87,15 @@ exports.update = async (req, res) => {
 exports.delete = async (req, res) => {
   try {
     //users can delete only reviews written by themselves
-    let review = await Review.findById(req.params.id);
+    let review = await Review.findOneAndDelete({
+      _id: req.params.id,
+      author: req.user._id,
+    });
+
     if (!review) {
       return res.status(404).json({ error: "Review not found!" });
     } else {
-      let reqUserId = mongoose.Types.ObjectId(req.user._id);
-      let reviewUserId = mongoose.Types.ObjectId(review.writtenBy);
-      if (reviewUserId.equals(reqUserId)) {
-        await review.remove();
-        return res.status(200).json({ success: "Review Deleted!" });
-      } else {
-        return res.status(403).json({
-          error: "You cannot edit reviews written by someone else.",
-        });
-      }
+      return res.status(200).json({ message: "Deleted!" });
     }
   } catch (error) {
     console.error(error);
