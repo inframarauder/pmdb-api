@@ -20,7 +20,7 @@ exports.list = async (req, res) => {
 //read a movie
 exports.read = async (req, res) => {
   try {
-    let movie = await Movie.findById(req.params.id);
+    let movie = await Movie.findById(req.params.id).lean();
     if (!movie) {
       return res.status(404).json({ error: "Movie not found!" });
     } else {
