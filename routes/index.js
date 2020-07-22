@@ -21,8 +21,7 @@ router.post("/auth/refresh_token", AuthController.refreshToken);
 router.delete("/auth/logout", AuthController.logout);
 
 //user routes
-router.get("/user/:id", AuthMiddleware.isAuthenticated, UserController.read);
-router.put("/user/:id", AuthMiddleware.isAuthenticated, UserController.update);
+router.get("/users/:id", AuthMiddleware.isAuthenticated, UserController.read);
 
 //movie routes
 //list
