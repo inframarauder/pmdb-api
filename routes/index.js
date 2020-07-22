@@ -26,9 +26,10 @@ router.get("/users/:id", AuthMiddleware.isAuthenticated, UserController.read);
 //movie routes
 //list
 router.get("/movies", FilterMiddleware.filterMovies, MovieController.list);
-
 //read
 router.get("/movies/:id", MovieController.read);
+//avg rating:
+router.get("/movies/:id/avg_rating", MovieController.avgRating);
 
 //review routes
 //list
