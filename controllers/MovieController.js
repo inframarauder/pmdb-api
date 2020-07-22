@@ -4,12 +4,7 @@ const Review = require("../models/review.model");
 //listing movies based on filters passed,in descending order of rating
 exports.list = async (req, res) => {
   try {
-    let movies = await Movie.find(res.locals.query, { reviews: 0 })
-      .sort({
-        rating: -1,
-      })
-      .lean();
-
+    let movies = await Movie.find(res.locals.query).sort({ _id: -1 }).lean();
     return res.status(200).json(movies);
   } catch (error) {
     console.error(error);
