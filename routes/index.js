@@ -30,8 +30,9 @@ router.get("/movies", FilterMiddleware.filterMovies, MovieController.list);
 router.get("/movies/:id", MovieController.read);
 
 //review routes
-//list
-router.get("/reviews", ReviewController.list);
+
+//list reviews of a movie
+router.get("/reviews/movie/:movieId", ReviewController.list);
 
 //create
 router.post(
@@ -42,7 +43,7 @@ router.post(
 );
 
 //read
-router.get("/reviews/:id", ReviewController.read);
+router.get("/reviews/read/:id", ReviewController.read);
 
 //update
 router.put(

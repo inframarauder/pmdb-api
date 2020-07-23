@@ -1,15 +1,15 @@
-const mongoose = require("mongoose");
 const Review = require("../models/review.model");
 const Helpers = require("../helpers");
 
 exports.list = async (req, res) => {
   try {
-    let reviews = await Review.find()
+    let reviews = await Review.find({ movie: req.params.movieId })
       .populate({
         path: "author",
         select: ["username"],
       })
-      .sort({ rating: -1 });
+      .sort({ rating: -1 })
+      .lean();
 
     return res.status(200).json(reviews);
   } catch (error) {
@@ -45,10 +45,12 @@ exports.create = async (req, res) => {
 
 exports.read = async (req, res) => {
   try {
-    let review = await Review.findById(req.params.id).populate({
-      path: "writtenBy",
-      select: ["username"],
-    });
+    let review = await Review.findById(req.params.id)
+      .populate({
+        path: "writtenBy",
+        select: ["username"],
+      })
+      .lean();
 
     if (review) {
       return res.status(200).json(review);
