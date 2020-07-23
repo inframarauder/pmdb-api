@@ -18,6 +18,19 @@ exports.list = async (req, res) => {
   }
 };
 
+exports.read = async (req, res) => {
+  try {
+    let review = await Review.findOne({
+      author: req.user._id,
+      movie: req.params.movieId,
+    }).lean();
+    return res.status(200).json(review);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal Server Error!" });
+  }
+};
+
 exports.create = async (req, res) => {
   try {
     //a user cannot give multiple reviews for the same movie
@@ -36,26 +49,6 @@ exports.create = async (req, res) => {
       }).save();
       res.status(201).json(newReview);
       Helpers.updateRating(newReview);
-    }
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: "Internal Server Error!" });
-  }
-};
-
-exports.read = async (req, res) => {
-  try {
-    let review = await Review.findById(req.params.id)
-      .populate({
-        path: "writtenBy",
-        select: ["username"],
-      })
-      .lean();
-
-    if (review) {
-      return res.status(200).json(review);
-    } else {
-      return res.status(404).json({ error: "Review not found!" });
     }
   } catch (error) {
     console.error(error);

@@ -42,8 +42,12 @@ router.post(
   ReviewController.create
 );
 
-//read
-router.get("/reviews/read/:id", ReviewController.read);
+//read by author and movie
+router.get(
+  "/reviews/read/:movieId",
+  AuthMiddleware.isAuthenticated,
+  ReviewController.read
+);
 
 //update
 router.put(
