@@ -2,7 +2,7 @@ const User = require("../models/user.model");
 
 exports.read = async (req, res) => {
   try {
-    let user = await User.findById(req.params.id, { password: 0, type: 0 });
+    let user = await User.findById(req.user._id, { password: 0 }).lean();
     if (!user) {
       res.status(404).json({ error: "User not found!" });
     } else {
