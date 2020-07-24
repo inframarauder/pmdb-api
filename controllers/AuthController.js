@@ -5,14 +5,14 @@ const jwt = require("jsonwebtoken");
 
 exports.signup = async (req, res) => {
   try {
-    let newUser = await new User(req.body).save();
-    let accessToken = await newUser.generateAccessToken();
-    let refreshToken = await newUser.generateRefreshToken();
+    let user = await new User(req.body).save();
+    let accessToken = await user.generateAccessToken();
+    let refreshToken = await user.generateRefreshToken();
 
     return res.status(200).json({
       accessToken,
       refreshToken,
-      user: { _id: newUser._id, username: newUser.username },
+      user: { _id: user._id, username: user.username },
     });
   } catch (error) {
     console.error(error);
@@ -40,7 +40,7 @@ exports.login = async (req, res) => {
         return res.status(200).json({
           accessToken,
           refreshToken,
-          user: { _id: newUser._id, username: newUser.username },
+          user: { _id: user._id, username: user.username },
         });
       } else {
         return res.status(401).json({ error: "Invalid username or password!" });
