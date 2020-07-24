@@ -9,7 +9,11 @@ exports.signup = async (req, res) => {
     let accessToken = await newUser.generateAccessToken();
     let refreshToken = await newUser.generateRefreshToken();
 
-    return res.status(200).json({ accessToken, refreshToken });
+    return res.status(200).json({
+      accessToken,
+      refreshToken,
+      user: { _id: newUser._id, username: newUser.username },
+    });
   } catch (error) {
     console.error(error);
     if (error.code === 11000) {
@@ -33,7 +37,11 @@ exports.login = async (req, res) => {
         let accessToken = await user.generateAccessToken();
         let refreshToken = await user.generateRefreshToken();
 
-        return res.status(200).json({ accessToken, refreshToken });
+        return res.status(200).json({
+          accessToken,
+          refreshToken,
+          user: { _id: newUser._id, username: newUser.username },
+        });
       } else {
         return res.status(401).json({ error: "Invalid username or password!" });
       }

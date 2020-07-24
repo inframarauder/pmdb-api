@@ -7,7 +7,6 @@ const ValidationMiddleware = require("../middlewares/ValidationMiddleware");
 //require controllers
 const MovieController = require("../controllers/MovieController");
 const AuthController = require("../controllers/AuthController");
-const UserController = require("../controllers/UserController");
 const ReviewController = require("../controllers/ReviewController");
 
 //auth routes
@@ -19,9 +18,6 @@ router.post(
 );
 router.post("/auth/refresh_token", AuthController.refreshToken);
 router.delete("/auth/logout", AuthController.logout);
-
-//user routes
-router.get("/user", AuthMiddleware.isAuthenticated, UserController.read);
 
 //movie routes
 //list
