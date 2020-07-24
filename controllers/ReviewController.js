@@ -58,9 +58,6 @@ exports.create = async (req, res) => {
 
 exports.update = async (req, res) => {
   try {
-    delete req.body["movie"];
-    delete req.body["author"];
-
     //users can update only reviews written by themselves
     let review = await Review.findOneAndUpdate(
       {
@@ -71,10 +68,10 @@ exports.update = async (req, res) => {
       { new: true, runValidators: true }
     ).populate({ path: "author", select: ["username"] });
     if (!review) {
-      res.status(404).json({ error: "Review not found!" });
-      Helpers.updateRating(review);
+      return res.status(404).json({ error: "Review not found!" });
     } else {
-      return res.status(200).json(review);
+      res.status(200).json(review);
+      Helpers.updateRating(review);
     }
   } catch (error) {
     console.error(error);
