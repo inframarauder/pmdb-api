@@ -14,7 +14,7 @@ exports.updateRating = async (review) => {
     );
 
     //some fix that i dont understand!
-    if (typeof sumOfRatings !== number) {
+    if (typeof sumOfRatings !== "number") {
       sumOfRatings = reviews.reduce(
         (acc, currVal) => acc.rating + currVal.rating
       ).rating;
