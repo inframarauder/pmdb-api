@@ -9,7 +9,7 @@ exports.updateRating = async (review) => {
     ).lean();
 
     let avgRating =
-      reviews.reduce((acc, currVal) => acc.rating + currVal.rating) /
+      reviews.reduce((acc, currVal) => acc.rating + currVal.rating).rating /
       reviews.length;
 
     await Movie.findByIdAndUpdate(
