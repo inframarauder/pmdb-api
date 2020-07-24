@@ -1,6 +1,5 @@
 const Movie = require("../models/movie.model");
 const Review = require("../models/review.model");
-const { number } = require("joi");
 
 exports.updateRating = async (review) => {
   try {
@@ -9,19 +8,16 @@ exports.updateRating = async (review) => {
       { rating: 1, _id: 0 }
     ).lean();
 
+    reviews = reviews.map((review) => review.rating);
+
     let sumOfRatings = reviews.reduce(
       (acc, currVal) => acc.rating + currVal.rating
     );
 
-    //some fix that i dont understand!
-    if (typeof sumOfRatings !== "number") {
-      sumOfRatings = reviews.reduce(
-        (acc, currVal) => acc.rating + currVal.rating
-      ).rating;
-    }
-
     let avgRating = sumOfRatings / reviews.length;
-
+    console.log("Reviews array", reviews);
+    console.log("Sum", sumOfRatings);
+    console.log("Average", avgRating);
     await Movie.findByIdAndUpdate(
       review.movie,
       { rating: avgRating },
